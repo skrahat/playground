@@ -2,15 +2,14 @@ package exercises
 
 import (
 	"fmt"
+	"strings"
 )
 
 func Exercise4() {
-	res := summer(2, 3, 4, 5)
-	fmt.Println("Exercise4:  %v", res)
+	res := summer("I", "am", "rahat")
+	fmt.Println("Exercise4: ", res)
 }
-func summer(a ...int) (sum int) {
-	for _, v := range a {
-		sum += v
-	}
+func summer(a ...string) (sum string) {
+	sum = strings.Join(a, " ")
 	return
 }
