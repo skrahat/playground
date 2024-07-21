@@ -9,4 +9,5 @@ func main() {
 	exercises.Exercise1() // Call the function with parentheses
 	exercises.Exercise2()
 	exercises.Exercise3()
+	exercises.Exercise4()
 }
