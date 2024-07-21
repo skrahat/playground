@@ -21,5 +21,5 @@ func Exercise2() {
 	square := Square{2, 2}
 	var newSquare Calculator = square
 	newSquareVal, ok := newSquare.(Square)
-	fmt.Println("Exercise1:  ", newSquareVal, ok)
+	fmt.Println("Exercise2:  ", newSquareVal, ok)
 }
