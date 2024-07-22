@@ -80,24 +80,31 @@ func Exercise5() {
 		url := "https://api.apis.guru/v2/list.json"
 		data, err := fetchAPIData(url)
 		if err != nil {
-			log.Fatalf("Error fetching data: %v", err)
+			http.Error(w, "Error fetching data", http.StatusInternalServerError)
+			log.Printf("Error fetching data: %v", err)
+			return
 		}
 
+		// Only handle the first item from the data
 		for id, apiInfo := range data {
-			fmt.Printf("API ID: %s\n", id)
+			fmt.Fprintf(w, "API ID: %s\n", id)
 			for version, versionInfo := range apiInfo.Versions {
-				fmt.Printf("  Version: %s\n", version)
-				fmt.Printf("  Title: %s\n", versionInfo.Info.Title)
-				fmt.Printf("  Description: %s\n", versionInfo.Info.Description)
-				fmt.Printf("  Provider: %s\n", versionInfo.Info.ProviderName)
+				fmt.Fprintf(w, "  Version: %s\n", version)
+				fmt.Fprintf(w, "  Title: %s\n", versionInfo.Info.Title)
+				fmt.Fprintf(w, "  Description: %s\n", versionInfo.Info.Description)
+				fmt.Fprintf(w, "  Provider: %s\n", versionInfo.Info.ProviderName)
 				if versionInfo.Info.Contact.Email != "" {
-					fmt.Printf("  Contact Email: %s\n", versionInfo.Info.Contact.Email)
+					fmt.Fprintf(w, "  Contact Email: %s\n", versionInfo.Info.Contact.Email)
 				}
-				fmt.Printf("\n")
+				fmt.Fprintf(w, "\n")
+				break // Break after handling the first version
 			}
+			break // Break after handling the first API
 		}
 	})
+
+	fmt.Println("Starting server at localhost:8080")
 	if err := http.ListenAndServe("localhost:8080", mux); err != nil {
-		fmt.Println(err.Error())
+		log.Fatalf("Server failed to start: %v", err)
 	}
 }
