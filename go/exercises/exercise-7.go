@@ -11,19 +11,22 @@ import (
 
 type IBankAccount interface {
 	GetBalance() int // returns balance
-	Withdraw(amount int) error
+	Withdraw(amount int) (string, error)
 	Deposit(amount int) error
 }
 
 type TDBank struct {
+	name    string
 	balance int
 }
 type RBCBank struct {
+	name    string
 	balance int
 }
 
 func NewTDAccount() *TDBank {
 	return &TDBank{
+		name:    "TD",
 		balance: 0,
 	}
 }
@@ -31,13 +34,14 @@ func (b *TDBank) GetBalance() int {
 	log.Printf("TD: current balance: %d", b.balance)
 	return b.balance
 }
-func (b *TDBank) Withdraw(amount int) error {
+func (b *TDBank) Withdraw(amount int) (string, error) {
 	newBlance := b.balance - amount - 10
 	if newBlance < 0 {
-		return errors.New("TD: insufficient amount")
+		return b.name, errors.New("insufficient amount")
 	}
 	b.balance = newBlance
-	return nil
+	log.Printf("TD: withdrawn successfully: %d", b.balance)
+	return b.name, nil
 }
 func (b *TDBank) Deposit(deposit int) error {
 	if deposit <= 0 {
@@ -52,6 +56,7 @@ func (b *TDBank) Deposit(deposit int) error {
 // ------------------------------------------------
 func NewRBCAccount() *RBCBank {
 	return &RBCBank{
+		name:    "RBC",
 		balance: 0,
 	}
 }
@@ -59,13 +64,14 @@ func (b *RBCBank) GetBalance() int {
 	log.Printf("RBC: current balance: %d", b.balance)
 	return b.balance
 }
-func (b *RBCBank) Withdraw(amount int) error {
+func (b *RBCBank) Withdraw(amount int) (string, error) {
 	newBlance := b.balance - amount - 5
 	if newBlance < 0 {
-		return errors.New("RBC: insufficient amount")
+		return b.name, errors.New("insufficient amount")
 	}
 	b.balance = newBlance
-	return nil
+	log.Printf("RBC: withdrawn successfully: %d", b.balance)
+	return b.name, nil
 }
 func (b *RBCBank) Deposit(deposit int) error {
 	if deposit <= 0 {
@@ -82,5 +88,16 @@ func Exercise7() {
 		NewRBCAccount(),
 		NewTDAccount(),
 	}
-	log.Println(myAccounts)
+	for _, v := range myAccounts {
+		v.Deposit(50)
+		if name, err := v.Withdraw(10); err != nil {
+			log.Printf("%v : %s", name, err)
+		}
+		v.Deposit(20)
+		if name, err := v.Withdraw(50); err != nil {
+			log.Printf("%v : %s", name, err)
+		}
+		log.Println(v.GetBalance())
+	}
+
 }
