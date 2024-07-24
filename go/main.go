@@ -12,5 +12,6 @@ func main() {
 	// exercises.Exercise4()
 	//exercises.Exercise5()
 	//exercises.Exercise6()
-	exercises.Exercise7()
+	//exercises.Exercise7()
+	exercises.Exercise8()
 }
